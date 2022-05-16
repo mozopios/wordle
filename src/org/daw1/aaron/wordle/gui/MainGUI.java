@@ -4,6 +4,10 @@
  */
 package org.daw1.aaron.wordle.gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+
 /**
  *
  * @author mozop
@@ -13,13 +17,46 @@ public class MainGUI extends javax.swing.JFrame {
     private static final java.awt.Color  COLOR_VERDE = new java.awt.Color(0, 102, 0);
     private static final java.awt.Color  COLOR_AMARILLO = new java.awt.Color(255 ,255, 51);
     private static final java.awt.Color  COLOR_ROJO = new java.awt.Color(255 ,0, 51);
+    
+    private static final int MAX_INTENTOS = 6;
+    private static final int TAMANHO_PALABRA = 5;
+    
+    private final javax.swing.JLabel[][] labels = new javax.swing.JLabel[MAX_INTENTOS][TAMANHO_PALABRA];
     /**
      * Creates new form MainGUI
      */
     public MainGUI() {
         initComponents();
+        inicializarLabels();
+        test();
     }
-
+    public void test() {
+        for (int i = 0; i < labels.length; i++) {
+            JLabel[] label = labels[i];
+            for (int j = 0; j < label.length; j++) {
+                JLabel jLabel = label[j];
+                jLabel.setVisible(false);
+                
+            }
+            
+        }
+    }
+    public final void inicializarLabels() {
+        for (int i = 1; i <= MAX_INTENTOS; i++) {
+            for (int j = 0; j <= TAMANHO_PALABRA; j++) {
+                try {
+                    String nombreLabel = "jLabel" + i + "_" + j;
+                    System.out.println(nombreLabel);
+                    javax.swing.JLabel aux = (javax.swing.JLabel) this.getClass().getDeclaredField(nombreLabel).get(this);
+                    labels[i-1][j-1] = aux;
+                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+            
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
