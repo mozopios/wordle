@@ -28,19 +28,19 @@ public class MainGUI extends javax.swing.JFrame {
     public MainGUI() {
         initComponents();
         inicializarLabels();
-        test();
+//        test();
     }
-    public void test() {
-        for (int i = 0; i < labels.length; i++) {
-            JLabel[] label = labels[i];
-            for (int j = 0; j < label.length; j++) {
-                JLabel jLabel = label[j];
-                jLabel.setVisible(false);
-                
-            }
-            
-        }
-    }
+//   public void test() {
+//        for (int i = 0; i < labels.length; i++) {
+//            JLabel[] label = labels[i];
+//            for (int j = 0; j < label.length; j++) {
+//                JLabel jLabel = label[j];
+//                jLabel.setVisible(false);
+//                
+//            }
+//            
+//        }
+//    }
     public final void inicializarLabels() {
         for (int i = 1; i <= MAX_INTENTOS; i++) {
             for (int j = 0; j <= TAMANHO_PALABRA; j++) {
@@ -114,14 +114,23 @@ public class MainGUI extends javax.swing.JFrame {
         finaljLabel = new javax.swing.JLabel();
         errorjPanel = new javax.swing.JPanel();
         errorjLabel = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        archivosjMenu = new javax.swing.JMenu();
+        nuevaPartidajMenuItem = new javax.swing.JMenuItem();
+        motoresjMenu = new javax.swing.JMenu();
+        archivojMenuItem = new javax.swing.JMenuItem();
+        baseDatosjMenuItem = new javax.swing.JMenuItem();
+        testjMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DAW1 Wordle Aarón");
         setPreferredSize(new java.awt.Dimension(200, 200));
 
+        mainjPanel.setBackground(new java.awt.Color(255, 255, 255));
         mainjPanel.setPreferredSize(new java.awt.Dimension(200, 200));
         mainjPanel.setLayout(new java.awt.BorderLayout());
 
+        letrasjPanel.setBackground(new java.awt.Color(255, 255, 255));
         letrasjPanel.setPreferredSize(new java.awt.Dimension(200, 200));
         letrasjPanel.setLayout(new java.awt.GridLayout(6, 5));
 
@@ -337,11 +346,15 @@ public class MainGUI extends javax.swing.JFrame {
 
         mainjPanel.add(letrasjPanel, java.awt.BorderLayout.CENTER);
 
+        bottomjPanel.setBackground(new java.awt.Color(255, 255, 255));
+        bottomjPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
         bottomjPanel.setPreferredSize(new java.awt.Dimension(200, 100));
         bottomjPanel.setLayout(new java.awt.GridLayout(2, 2));
 
+        estadojPanel.setBackground(new java.awt.Color(255, 255, 255));
         estadojPanel.setLayout(new java.awt.GridLayout(3, 0));
 
+        maljPanel.setBackground(new java.awt.Color(255, 255, 255));
         maljPanel.setLayout(new java.awt.GridLayout());
 
         maljLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -352,6 +365,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         estadojPanel.add(maljPanel);
 
+        existejPanel.setBackground(new java.awt.Color(255, 255, 255));
         existejPanel.setLayout(new java.awt.GridLayout());
 
         existejLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -360,6 +374,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         estadojPanel.add(existejPanel);
 
+        bienjPanel.setBackground(new java.awt.Color(255, 255, 255));
         bienjPanel.setLayout(new java.awt.GridLayout());
 
         bienjLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -370,6 +385,8 @@ public class MainGUI extends javax.swing.JFrame {
 
         bottomjPanel.add(estadojPanel);
 
+        inputjPanel.setBackground(new java.awt.Color(255, 255, 255));
+
         palabrajTextField.setPreferredSize(new java.awt.Dimension(120, 23));
         inputjPanel.add(palabrajTextField);
 
@@ -378,6 +395,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         bottomjPanel.add(inputjPanel);
 
+        exitojPanel.setBackground(new java.awt.Color(255, 255, 255));
         exitojPanel.setLayout(new java.awt.GridBagLayout());
 
         finaljLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -391,6 +409,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         bottomjPanel.add(exitojPanel);
 
+        errorjPanel.setBackground(new java.awt.Color(255, 255, 255));
         errorjPanel.setLayout(new java.awt.GridBagLayout());
 
         errorjLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -406,15 +425,41 @@ public class MainGUI extends javax.swing.JFrame {
 
         mainjPanel.add(bottomjPanel, java.awt.BorderLayout.PAGE_END);
 
+        archivosjMenu.setText("Archivo");
+
+        nuevaPartidajMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        nuevaPartidajMenuItem.setText("Nueva Partida");
+        archivosjMenu.add(nuevaPartidajMenuItem);
+
+        jMenuBar1.add(archivosjMenu);
+
+        motoresjMenu.setText("Motores");
+
+        archivojMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        archivojMenuItem.setText("Fichero");
+        motoresjMenu.add(archivojMenuItem);
+
+        baseDatosjMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        baseDatosjMenuItem.setText("Base de Datos");
+        motoresjMenu.add(baseDatosjMenuItem);
+
+        testjMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        testjMenuItem.setText("Test");
+        motoresjMenu.add(testjMenuItem);
+
+        jMenuBar1.add(motoresjMenu);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainjPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
+            .addComponent(mainjPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 820, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainjPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+            .addComponent(mainjPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
         );
 
         pack();
@@ -456,6 +501,9 @@ public class MainGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem archivojMenuItem;
+    private javax.swing.JMenu archivosjMenu;
+    private javax.swing.JMenuItem baseDatosjMenuItem;
     private javax.swing.JLabel bienjLabel;
     private javax.swing.JPanel bienjPanel;
     private javax.swing.JPanel bottomjPanel;
@@ -498,10 +546,14 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6_3;
     private javax.swing.JLabel jLabel6_4;
     private javax.swing.JLabel jLabel6_5;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel letrasjPanel;
     private javax.swing.JPanel mainjPanel;
     private javax.swing.JLabel maljLabel;
     private javax.swing.JPanel maljPanel;
+    private javax.swing.JMenu motoresjMenu;
+    private javax.swing.JMenuItem nuevaPartidajMenuItem;
     private javax.swing.JTextField palabrajTextField;
+    private javax.swing.JMenuItem testjMenuItem;
     // End of variables declaration//GEN-END:variables
 }
