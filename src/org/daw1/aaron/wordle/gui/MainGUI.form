@@ -32,12 +32,17 @@
                 <Property name="text" type="java.lang.String" value="Fichero"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="baseDatosjMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="baseDatosEsjMenuItem">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+B"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Base de Datos"/>
+                <Property name="text" type="java.lang.String" value="Base de Datos(Espa&#xf1;ol)"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="baseDatosGajMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Base de Datos(Gallego)"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="testjMenuItem">
@@ -45,7 +50,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+T"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Test"/>
+                <Property name="text" type="java.lang.String" value="Motor Test"/>
               </Properties>
             </MenuItem>
           </SubComponents>

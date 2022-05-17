@@ -4,6 +4,8 @@
  */
 package org.daw1.aaron.wordle;
 
+import org.daw1.aaron.wordle.motores.MotorFichero;
+
 /**
  *
  * @author mozop

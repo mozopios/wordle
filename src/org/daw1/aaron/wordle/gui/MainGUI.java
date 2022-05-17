@@ -119,7 +119,8 @@ public class MainGUI extends javax.swing.JFrame {
         nuevaPartidajMenuItem = new javax.swing.JMenuItem();
         motoresjMenu = new javax.swing.JMenu();
         archivojMenuItem = new javax.swing.JMenuItem();
-        baseDatosjMenuItem = new javax.swing.JMenuItem();
+        baseDatosEsjMenuItem = new javax.swing.JMenuItem();
+        baseDatosGajMenuItem = new javax.swing.JMenuItem();
         testjMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -355,7 +356,7 @@ public class MainGUI extends javax.swing.JFrame {
         estadojPanel.setLayout(new java.awt.GridLayout(3, 0));
 
         maljPanel.setBackground(new java.awt.Color(255, 255, 255));
-        maljPanel.setLayout(new java.awt.GridLayout());
+        maljPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         maljLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         maljLabel.setForeground(new java.awt.Color(255, 0, 51));
@@ -366,7 +367,7 @@ public class MainGUI extends javax.swing.JFrame {
         estadojPanel.add(maljPanel);
 
         existejPanel.setBackground(new java.awt.Color(255, 255, 255));
-        existejPanel.setLayout(new java.awt.GridLayout());
+        existejPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         existejLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         existejLabel.setForeground(new java.awt.Color(255, 255, 51));
@@ -375,7 +376,7 @@ public class MainGUI extends javax.swing.JFrame {
         estadojPanel.add(existejPanel);
 
         bienjPanel.setBackground(new java.awt.Color(255, 255, 255));
-        bienjPanel.setLayout(new java.awt.GridLayout());
+        bienjPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         bienjLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         bienjLabel.setForeground(new java.awt.Color(0, 102, 0));
@@ -439,12 +440,15 @@ public class MainGUI extends javax.swing.JFrame {
         archivojMenuItem.setText("Fichero");
         motoresjMenu.add(archivojMenuItem);
 
-        baseDatosjMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        baseDatosjMenuItem.setText("Base de Datos");
-        motoresjMenu.add(baseDatosjMenuItem);
+        baseDatosEsjMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        baseDatosEsjMenuItem.setText("Base de Datos(Español)");
+        motoresjMenu.add(baseDatosEsjMenuItem);
+
+        baseDatosGajMenuItem.setText("Base de Datos(Gallego)");
+        motoresjMenu.add(baseDatosGajMenuItem);
 
         testjMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        testjMenuItem.setText("Test");
+        testjMenuItem.setText("Motor Test");
         motoresjMenu.add(testjMenuItem);
 
         jMenuBar1.add(motoresjMenu);
@@ -503,7 +507,8 @@ public class MainGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem archivojMenuItem;
     private javax.swing.JMenu archivosjMenu;
-    private javax.swing.JMenuItem baseDatosjMenuItem;
+    private javax.swing.JMenuItem baseDatosEsjMenuItem;
+    private javax.swing.JMenuItem baseDatosGajMenuItem;
     private javax.swing.JLabel bienjLabel;
     private javax.swing.JPanel bienjPanel;
     private javax.swing.JPanel bottomjPanel;
