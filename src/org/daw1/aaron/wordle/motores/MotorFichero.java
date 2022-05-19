@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class MotorFichero implements IMotor{
     
-    private static File fichero = new File("dist" + File.separator + "data" + File.separator + "fichero.txt");
+    private static File fichero = new File("." + File.separator + "data" + File.separator + "fichero.txt");
     
     private Set<String> palabras = new HashSet<>();
     

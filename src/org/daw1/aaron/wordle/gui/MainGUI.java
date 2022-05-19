@@ -4,9 +4,13 @@
  */
 package org.daw1.aaron.wordle.gui;
 
+import com.google.common.base.Preconditions;
+import static java.awt.PageAttributes.MediaType.A;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JLabel;
+import org.daw1.aaron.wordle.motores.MotorFichero;
 
 /**
  *
@@ -18,6 +22,8 @@ public class MainGUI extends javax.swing.JFrame {
     private static final java.awt.Color  COLOR_AMARILLO = new java.awt.Color(255 ,255, 51);
     private static final java.awt.Color  COLOR_ROJO = new java.awt.Color(255 ,0, 51);
     
+    private static final Pattern PATRON_INPUT = Pattern.compile("[A-Za-z]{5}");
+    
     private static final int MAX_INTENTOS = 6;
     private static final int TAMANHO_PALABRA = 5;
     
@@ -27,7 +33,7 @@ public class MainGUI extends javax.swing.JFrame {
      */
     public MainGUI() {
         initComponents();
-        inicializarLabels();
+       // inicializarLabels();
 //        test();
     }
 //   public void test() {
@@ -392,6 +398,11 @@ public class MainGUI extends javax.swing.JFrame {
         inputjPanel.add(palabrajTextField);
 
         enviarjButton.setText("Enviar");
+        enviarjButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enviarjButtonActionPerformed(evt);
+            }
+        });
         inputjPanel.add(enviarjButton);
 
         bottomjPanel.add(inputjPanel);
@@ -438,6 +449,11 @@ public class MainGUI extends javax.swing.JFrame {
 
         archivojMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         archivojMenuItem.setText("Fichero");
+        archivojMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                archivojMenuItemActionPerformed(evt);
+            }
+        });
         motoresjMenu.add(archivojMenuItem);
 
         baseDatosEsjMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -468,6 +484,52 @@ public class MainGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    /**
+     * Acccion boton MotorFichero
+     * @param evt 
+     */
+    private void archivojMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_archivojMenuItemActionPerformed
+        // TODO add your handling code here:
+        MotorFichero motor = null;
+        String input = null;
+        String aleatoria = motor.palabraAleatoria();
+        int intentos = MAX_INTENTOS;
+        
+            do{   
+                if(!PATRON_INPUT.matcher(this.palabrajTextField.getText()).matches()){
+                    input = this.palabrajTextField.toString().toLowerCase();
+                    motor = new MotorFichero();
+                    if(input.equals(aleatoria)){
+                    // jLabels en verde y mensaje de Éxito
+                    }else{
+                        // color Jlabels
+                        intentos--;
+                    }
+                }else{
+                    this.errorjLabel.setForeground(COLOR_ROJO);
+                    this.errorjLabel.setText("La palabra debe contener 5 letras");
+                }
+        }while(intentos > 0 || input.equals(aleatoria));
+            if(intentos >= 0){
+            this.errorjLabel.setForeground(COLOR_ROJO);
+            this.errorjLabel.setText("Se ha finalizado los numeros de intentos la palabra correcta es: " + aleatoria);
+            }else{
+                this.errorjLabel.setForeground(COLOR_VERDE);
+                this.errorjLabel.setText("Éxito ha acertado la palabra aleatoria " + aleatoria);
+            }
+    }//GEN-LAST:event_archivojMenuItemActionPerformed
+
+    private void enviarjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarjButtonActionPerformed
+        if(this.archivojMenuItem.isSelected()){
+            archivojMenuItemActionPerformed(evt);
+        }else if(this.baseDatosEsjMenuItem.isSelected()){
+            
+        }else if(this.baseDatosGajMenuItem.isSelected()){
+            
+        }else if(this.testjMenuItem.isSelected()){
+            
+        }
+    }//GEN-LAST:event_enviarjButtonActionPerformed
 
     /**
      * @param args the command line arguments
