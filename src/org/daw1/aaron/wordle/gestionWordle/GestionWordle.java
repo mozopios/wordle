@@ -4,12 +4,15 @@
  */
 package org.daw1.aaron.wordle.gestionWordle;
 
+import java.awt.Color;
 import org.daw1.aaron.wordle.motores.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import org.daw1.aaron.wordle.gui.MainGUI;
 
 /**
  *
@@ -17,21 +20,28 @@ import java.util.TreeSet;
  */
 public class GestionWordle {
     
+    private static final java.awt.Color rojo = new java.awt.Color(255 ,0, 51);
+    private static final java.awt.Color amarillo = new java.awt.Color(255 ,255, 51);
+    private static final java.awt.Color verde = new java.awt.Color(0, 102, 0);
+    private static final java.awt.Color negro = new java.awt.Color(255,255,255);
+    
+    private static IMotor motor;
+    private String palabraAleatoria = motor.palabraAleatoria();
     
     /**
      * 
      */
-    private Map<Character,Integer> mapCaracteresAleatoria = new HashMap<>();
+    private Map<Character,Integer> mapCaracteresAleatoria = new TreeMap<>();
     
     /**
      * Almacena los caracteres y la posicion de ellos de la palabra actual insertada por el usuario
      */
-    private Map<Character,Integer> mapCaracteresInputUsuario = new HashMap<>();
+    private Map<Character,Integer> mapCaracteresInputUsuario = new TreeMap<>();
     
     /**
      * Almacena los caracteres y la posicion de ellos de las palabras insertadas por el usuario
      */
-    private Map<Character,Integer> mapTodosLosCaracteresInputUsuario = new HashMap<>();
+    private Map<Character,Integer> mapTodosLosCaracteresInputUsuario = new TreeMap<>();
     
     private Set<Character> letrasBien = new TreeSet<>();
     private Set<Character> letrasMal = new TreeSet<>();
@@ -41,9 +51,9 @@ public class GestionWordle {
      * @param aleatoria
      * @return mapCaracteresAleatoria
      */
-    public Map<Character,Integer> almacenarCaracteresAleatoria(String aleatoria){
-        for (int i = 0; i < aleatoria.length(); i++) {
-            char caracter = aleatoria.charAt(i);
+    public Map<Character,Integer> almacenarCaracteresAleatoria(){
+        for (int i = 0; i < this.palabraAleatoria.length(); i++) {
+            char caracter = this.palabraAleatoria.charAt(i);
             this.mapCaracteresAleatoria.put(caracter, i);    
         }
         return this.mapCaracteresAleatoria;
@@ -87,56 +97,31 @@ public class GestionWordle {
         }
     }
     
-    public void letrasExiste(char existe){
-        if(!this.letrasExiste.contains(existe)){
-            this.letrasExiste.add(existe);
-        }
-    }
-    
-    public java.awt.Color coloresLetras(String input,MotorFichero motor){
-        java.awt.Color rojo = new java.awt.Color(255 ,0, 51);
-        java.awt.Color amarillo = new java.awt.Color(255 ,255, 51);
-        java.awt.Color verde = new java.awt.Color(0, 102, 0);
-        java.awt.Color negro = new java.awt.Color(255,255,255);
-        
-        String aleatoria = motor.palabraAleatoria();
-        
-        this.almacenarCaracteresAleatoria(aleatoria);
-        this.almacenarCaracteresInputUsuario(input);
-        this.almacenarTodosLosCaracteresPalbrasInputUsuario(input);
-        
-        java.awt.Color color = null;
-        
-        Iterator <Map.Entry<Character,Integer>> entriItInput = this.mapCaracteresInputUsuario.entrySet().iterator();
-        
-        if(input.equals(aleatoria)){
-            
-            return color = verde;
-            
+    public java.awt.Color[] coloresLetras(String input){
+        java.awt.Color[] arrayColores = new java.awt.Color[5];
+        if(this.palabraAleatoria.equals(input)){
+                for (int i = 0; i < arrayColores.length; i++) {
+                arrayColores[i] = verde;
+            }
+                return arrayColores;
         }else{
-            while(entriItInput.hasNext()){
-                char caracter = entriItInput.next().getKey();
-                int posicion = entriItInput.next().getValue();
-                if(this.mapCaracteresAleatoria.containsKey(caracter) && this.mapCaracteresAleatoria.get(caracter).equals(posicion)){
-                    this.letrasBien(caracter);
-                    return color = verde;
-                }else if(this.mapCaracteresAleatoria.containsKey(caracter) && !this.mapCaracteresAleatoria.get(caracter).equals(posicion) && !this.mapTodosLosCaracteresInputUsuario.containsKey(caracter)){
-                    this.letrasExiste(caracter);
-                    return color = amarillo;
-                
-                }else if(this.mapCaracteresAleatoria.containsKey(caracter) && !this.mapCaracteresAleatoria.get(caracter).equals(posicion) && !this.mapTodosLosCaracteresInputUsuario.containsKey(caracter)){
-                    this.letrasExiste(caracter);
-                    return color = negro;
+            for (int i = 0; i < arrayColores.length; i++) {
+                char caracter = input.charAt(i); // seguir con esto y buscar caracter en el map de aleatoria
+                if(this.mapCaracteresAleatoria.containsKey(caracter) && this.mapCaracteresAleatoria.get(caracter).intValue() == i){
+                    arrayColores[i] = verde;
+                    this.letrasBien.add(caracter);
+                }else if(this.mapCaracteresAleatoria.containsKey(caracter) && this.mapCaracteresAleatoria.get(caracter).intValue()!= i){
+                    arrayColores[i] = amarillo;
+                }else if(this.mapCaracteresAleatoria.containsKey(caracter) && this.mapCaracteresAleatoria.get(caracter).intValue()!= i && this.mapTodosLosCaracteresInputUsuario.containsKey(caracter)){
+                    arrayColores[i] = negro;
                 }else{
-                    this.letrasMal(caracter);
-                    return color = rojo;
+                    arrayColores[i] = rojo;
+                    this.letrasMal.add(caracter);
                 }
+
             }
         }
-        this.mapCaracteresAleatoria.clear();
-        this.mapCaracteresInputUsuario.clear();
-        // como cambiar para que printe la letra en el color adeacuado y como hacer para printar los SET
-        return color;
+        return arrayColores;
     }
     
 }

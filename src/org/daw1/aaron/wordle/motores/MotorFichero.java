@@ -41,7 +41,7 @@ public class MotorFichero implements IMotor{
             } catch (IOException ex) {
                 Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }//Preguntar si tendria que crear la ruta en el else
         return palabras;
     }
     
@@ -63,7 +63,7 @@ public class MotorFichero implements IMotor{
             } catch (IOException ex) {
                 Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        }// Preguntar si tendria que devolve run throws
         return palabras;
     }
 
