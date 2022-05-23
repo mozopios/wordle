@@ -489,34 +489,7 @@ public class MainGUI extends javax.swing.JFrame {
      * @param evt 
      */
     private void archivojMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_archivojMenuItemActionPerformed
-        // TODO add your handling code here:
-        MotorFichero motor = null;
-        String input = null;
-        String aleatoria = motor.palabraAleatoria();
-        int intentos = MAX_INTENTOS;
-        
-            do{   
-                if(!PATRON_INPUT.matcher(this.palabrajTextField.getText()).matches()){
-                    input = this.palabrajTextField.toString().toLowerCase();
-                    motor = new MotorFichero();
-                    if(input.equals(aleatoria)){
-                    // jLabels en verde y mensaje de Éxito
-                    }else{
-                        // color Jlabels
-                        intentos--;
-                    }
-                }else{
-                    this.errorjLabel.setForeground(COLOR_ROJO);
-                    this.errorjLabel.setText("La palabra debe contener 5 letras");
-                }
-        }while(intentos > 0 || input.equals(aleatoria));
-            if(intentos >= 0){
-            this.errorjLabel.setForeground(COLOR_ROJO);
-            this.errorjLabel.setText("Se ha finalizado los numeros de intentos la palabra correcta es: " + aleatoria);
-            }else{
-                this.errorjLabel.setForeground(COLOR_VERDE);
-                this.errorjLabel.setText("Éxito ha acertado la palabra aleatoria " + aleatoria);
-            }
+        // Checkbox fichero
     }//GEN-LAST:event_archivojMenuItemActionPerformed
 
     private void enviarjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarjButtonActionPerformed
