@@ -5,12 +5,18 @@
 package org.daw1.aaron.wordle.gui;
 
 import com.google.common.base.Preconditions;
+import java.awt.Color;
 import static java.awt.PageAttributes.MediaType.A;
+import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JLabel;
+import org.daw1.aaron.wordle.gestionWordle.GestionWordle;
+import org.daw1.aaron.wordle.motores.MotorBaseDatosES;
+import org.daw1.aaron.wordle.motores.MotorBaseDatosGA;
 import org.daw1.aaron.wordle.motores.MotorFichero;
+import org.daw1.aaron.wordle.motores.MotorTest;
 
 /**
  *
@@ -28,25 +34,30 @@ public class MainGUI extends javax.swing.JFrame {
     private static final int TAMANHO_PALABRA = 5;
     
     private final javax.swing.JLabel[][] labels = new javax.swing.JLabel[MAX_INTENTOS][TAMANHO_PALABRA];
+    
+    private GestionWordle gestion;
     /**
      * Creates new form MainGUI
      */
-    public MainGUI() {
+    public MainGUI() throws Exception {
+        ActionEvent evt = null;
+//        gestion = new GestionWordle(new MotorFichero());
+        this.enviarjButtonActionPerformed(evt);
         initComponents();
-       // inicializarLabels();
-//        test();
+        //inicializarLabels();       
+       //test();
     }
-//   public void test() {
-//        for (int i = 0; i < labels.length; i++) {
-//            JLabel[] label = labels[i];
-//            for (int j = 0; j < label.length; j++) {
-//                JLabel jLabel = label[j];
-//                jLabel.setVisible(false);
-//                
-//            }
-//            
-//        }
-//    }
+   public void test() {
+        for (int i = 0; i < labels.length; i++) {
+            JLabel[] label = labels[i];
+            for (int j = 0; j < label.length; j++) {
+                JLabel jLabel = label[j];
+                jLabel.setForeground(COLOR_ROJO);
+                
+            }
+            
+        }
+    }
     public final void inicializarLabels() {
         for (int i = 1; i <= MAX_INTENTOS; i++) {
             for (int j = 0; j <= TAMANHO_PALABRA; j++) {
@@ -73,6 +84,7 @@ public class MainGUI extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         mainjPanel = new javax.swing.JPanel();
         letrasjPanel = new javax.swing.JPanel();
         jLabel1_1 = new javax.swing.JLabel();
@@ -124,10 +136,12 @@ public class MainGUI extends javax.swing.JFrame {
         archivosjMenu = new javax.swing.JMenu();
         nuevaPartidajMenuItem = new javax.swing.JMenuItem();
         motoresjMenu = new javax.swing.JMenu();
-        archivojMenuItem = new javax.swing.JMenuItem();
-        baseDatosEsjMenuItem = new javax.swing.JMenuItem();
-        baseDatosGajMenuItem = new javax.swing.JMenuItem();
-        testjMenuItem = new javax.swing.JMenuItem();
+        fichero = new javax.swing.JRadioButtonMenuItem();
+        BDDES = new javax.swing.JRadioButtonMenuItem();
+        BDDGA = new javax.swing.JRadioButtonMenuItem();
+        Test = new javax.swing.JRadioButtonMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        GestionMotor = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DAW1 Wordle Aarón");
@@ -446,26 +460,61 @@ public class MainGUI extends javax.swing.JFrame {
         jMenuBar1.add(archivosjMenu);
 
         motoresjMenu.setText("Motores");
-
-        archivojMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        archivojMenuItem.setText("Fichero");
-        archivojMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        motoresjMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                archivojMenuItemActionPerformed(evt);
+                motoresjMenuActionPerformed(evt);
             }
         });
-        motoresjMenu.add(archivojMenuItem);
 
-        baseDatosEsjMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        baseDatosEsjMenuItem.setText("Base de Datos(Español)");
-        motoresjMenu.add(baseDatosEsjMenuItem);
+        fichero.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        fichero.setSelected(true);
+        fichero.setText("Motor Fichero ");
+        fichero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ficheroActionPerformed(evt);
+            }
+        });
+        motoresjMenu.add(fichero);
 
-        baseDatosGajMenuItem.setText("Base de Datos(Gallego)");
-        motoresjMenu.add(baseDatosGajMenuItem);
+        BDDES.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        BDDES.setSelected(true);
+        BDDES.setText(" Motor BDDES");
+        BDDES.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BDDESActionPerformed(evt);
+            }
+        });
+        motoresjMenu.add(BDDES);
 
-        testjMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        testjMenuItem.setText("Motor Test");
-        motoresjMenu.add(testjMenuItem);
+        BDDGA.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        BDDGA.setSelected(true);
+        BDDGA.setText("Motor BDDGA");
+        BDDGA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BDDGAActionPerformed(evt);
+            }
+        });
+        motoresjMenu.add(BDDGA);
+
+        Test.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Test.setSelected(true);
+        Test.setText("Motor Test");
+        Test.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TestActionPerformed(evt);
+            }
+        });
+        motoresjMenu.add(Test);
+        motoresjMenu.add(jSeparator1);
+
+        GestionMotor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        GestionMotor.setText("Gestion Motor");
+        GestionMotor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GestionMotorActionPerformed(evt);
+            }
+        });
+        motoresjMenu.add(GestionMotor);
 
         jMenuBar1.add(motoresjMenu);
 
@@ -484,25 +533,136 @@ public class MainGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    /**
-     * Acccion boton MotorFichero
-     * @param evt 
-     */
-    private void archivojMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_archivojMenuItemActionPerformed
-        // Checkbox fichero
-    }//GEN-LAST:event_archivojMenuItemActionPerformed
 
     private void enviarjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarjButtonActionPerformed
-        if(this.archivojMenuItem.isSelected()){
-            archivojMenuItemActionPerformed(evt);
-        }else if(this.baseDatosEsjMenuItem.isSelected()){
+        if(this.palabrajTextField.getText().length() == TAMANHO_PALABRA){
+            if(this.fichero.isSelected()){
+                this.ficheroActionPerformed(evt);
+            }else if(this.BDDES.isSelected()){
+                try {
+                    gestion = new GestionWordle(new MotorBaseDatosES());
+                    this.BDDESActionPerformed(evt);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else if(this.BDDGA.isSelected()){
+                try {
+                    gestion = new GestionWordle(new MotorBaseDatosGA());
+                    this.BDDGAActionPerformed(evt);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else if(this.Test.isSelected()){
+                try {
+                    gestion = new GestionWordle(new MotorTest());
+                    this.TestActionPerformed(evt);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             
-        }else if(this.baseDatosGajMenuItem.isSelected()){
-            
-        }else if(this.testjMenuItem.isSelected()){
+        }else{
+               this.errorjLabel.setForeground(COLOR_ROJO);
+               this.errorjLabel.setText("La palabra tiene que tener cinco caracteres");
+            }
             
         }
     }//GEN-LAST:event_enviarjButtonActionPerformed
+
+    private void GestionMotorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GestionMotorActionPerformed
+        
+    }//GEN-LAST:event_GestionMotorActionPerformed
+
+    private void motoresjMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motoresjMenuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_motoresjMenuActionPerformed
+
+    private void ficheroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ficheroActionPerformed
+        String input = this.palabrajTextField.getText();
+        String aleatoria = gestion.getPalabraAleatoria();
+        Color[] colores = gestion.coloresLetras(input);
+        int intentos = 0;
+        
+        do{
+            for(int i = 0; i < colores.length; i++) {
+                Color color = colores[i];
+                
+            }
+            
+        }while(input.equals(aleatoria) && intentos == MAX_INTENTOS);
+        if(input.equals(aleatoria)){
+            this.finaljLabel.setForeground(COLOR_VERDE);
+            this.finaljLabel.setText("Ha acertado la palabra");
+        }else{
+            this.finaljLabel.setForeground(COLOR_ROJO);
+            this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+        }
+    }//GEN-LAST:event_ficheroActionPerformed
+
+    private void BDDESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BDDESActionPerformed
+        String input = this.palabrajTextField.getText();
+        String aleatoria = gestion.getPalabraAleatoria();
+        Color[] colores = gestion.coloresLetras(input);
+        int intentos = 0;
+        
+        do{
+            for(int i = 0; i < colores.length; i++) {
+                Color color = colores[i];
+                
+            }
+            
+        }while(input.equals(aleatoria) && intentos == MAX_INTENTOS);
+        if(input.equals(aleatoria)){
+            this.finaljLabel.setForeground(COLOR_VERDE);
+            this.finaljLabel.setText("Ha acertado la palabra");
+        }else{
+            this.finaljLabel.setForeground(COLOR_ROJO);
+            this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+        }
+    }//GEN-LAST:event_BDDESActionPerformed
+
+    private void BDDGAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BDDGAActionPerformed
+        String input = this.palabrajTextField.getText();
+        String aleatoria = gestion.getPalabraAleatoria();
+        Color[] colores = gestion.coloresLetras(input);
+        int intentos = 0;
+        
+        do{
+            for(int i = 0; i < colores.length; i++) {
+                Color color = colores[i];
+                
+            }
+            
+        }while(input.equals(aleatoria) && intentos == MAX_INTENTOS);
+        if(input.equals(aleatoria)){
+            this.finaljLabel.setForeground(COLOR_VERDE);
+            this.finaljLabel.setText("Ha acertado la palabra");
+        }else{
+            this.finaljLabel.setForeground(COLOR_ROJO);
+            this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+        }
+    }//GEN-LAST:event_BDDGAActionPerformed
+
+    private void TestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestActionPerformed
+        String input = this.palabrajTextField.getText();
+        String aleatoria = gestion.getPalabraAleatoria();
+        Color[] colores = gestion.coloresLetras(input);
+        int intentos = 0;
+        
+        do{
+            for(int i = 0; i < colores.length; i++) {
+                Color color = colores[i];
+                
+            }
+            
+        }while(input.equals(aleatoria) && intentos == MAX_INTENTOS);
+        if(input.equals(aleatoria)){
+            this.finaljLabel.setForeground(COLOR_VERDE);
+            this.finaljLabel.setText("Ha acertado la palabra");
+        }else{
+            this.finaljLabel.setForeground(COLOR_ROJO);
+            this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+        }
+    }//GEN-LAST:event_TestActionPerformed
 
     /**
      * @param args the command line arguments
@@ -534,19 +694,25 @@ public class MainGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainGUI().setVisible(true);
+                try {
+                    new MainGUI().setVisible(true);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem archivojMenuItem;
+    private javax.swing.JRadioButtonMenuItem BDDES;
+    private javax.swing.JRadioButtonMenuItem BDDGA;
+    private javax.swing.JMenuItem GestionMotor;
+    private javax.swing.JRadioButtonMenuItem Test;
     private javax.swing.JMenu archivosjMenu;
-    private javax.swing.JMenuItem baseDatosEsjMenuItem;
-    private javax.swing.JMenuItem baseDatosGajMenuItem;
     private javax.swing.JLabel bienjLabel;
     private javax.swing.JPanel bienjPanel;
     private javax.swing.JPanel bottomjPanel;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton enviarjButton;
     private javax.swing.JLabel errorjLabel;
     private javax.swing.JPanel errorjPanel;
@@ -554,6 +720,7 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JLabel existejLabel;
     private javax.swing.JPanel existejPanel;
     private javax.swing.JPanel exitojPanel;
+    private javax.swing.JRadioButtonMenuItem fichero;
     private javax.swing.JLabel finaljLabel;
     private javax.swing.JPanel inputjPanel;
     private javax.swing.JLabel jLabel1_1;
@@ -587,6 +754,7 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6_4;
     private javax.swing.JLabel jLabel6_5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPanel letrasjPanel;
     private javax.swing.JPanel mainjPanel;
     private javax.swing.JLabel maljLabel;
@@ -594,6 +762,5 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JMenu motoresjMenu;
     private javax.swing.JMenuItem nuevaPartidajMenuItem;
     private javax.swing.JTextField palabrajTextField;
-    private javax.swing.JMenuItem testjMenuItem;
     // End of variables declaration//GEN-END:variables
 }

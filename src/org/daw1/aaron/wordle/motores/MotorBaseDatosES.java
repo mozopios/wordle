@@ -22,15 +22,15 @@ public class MotorBaseDatosES implements IMotor {
     private static final String URL = "jdbc.sqlite:data/dbwordle.db";
 
     @Override
-    public String palabraAleatoria(){
+    public String palabraAleatoria() throws SQLException{
         String palabraAleatoria = "";
         try(Connection conn = DriverManager.getConnection(URL);
                 Statement consulta = conn.createStatement();
                 var rs = consulta.executeQuery("SELECT COUNT(palabra) from palabras WHERE lang = \"es\"")){
                     long numeroPalabras = rs.getLong("COUNT(palabras");
-                    java.util.Random aleatorio = new java.util.Random(numeroPalabras);
+                    int aleatorio = new java.util.Random(numeroPalabras).hashCode();
                     try(Connection conne = DriverManager.getConnection(URL);
-                    PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = \"es\" limit ?")){
+                    PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = \"es\" limit ?,1")){
                         consultaAle.setLong(1, Math.toIntExact(aleatorio));
                         try(var rsAle = consultaAle.executeQuery()){
                             palabraAleatoria = rsAle.getNString("palabra");
@@ -44,7 +44,7 @@ public class MotorBaseDatosES implements IMotor {
     }
 
     @Override
-    public boolean existePalabra(String palabra) {
+    public boolean existePalabra(String palabra) throws SQLException {
         boolean existe = false;
         try(Connection conne = DriverManager.getConnection(URL);
                     PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = \"ga\" AND palabra = \"?\"")){
@@ -65,7 +65,7 @@ public class MotorBaseDatosES implements IMotor {
     }
 
     @Override
-    public boolean borrarPalabra(String palabra) {
+    public boolean borrarPalabra(String palabra) throws SQLException {
         boolean borrada = false;
         if(existePalabra(palabra)){
             try(Connection conn = DriverManager.getConnection(URL);
@@ -87,25 +87,25 @@ public class MotorBaseDatosES implements IMotor {
     }
 
     @Override
-    public boolean añadirPalabra(String palabra) {
+    public boolean añadirPalabra(String palabra) throws SQLException {
         boolean insertada = false;
-        if(!existePalabra(palabra)){
-            try(Connection conn = DriverManager.getConnection(URL);
-                    PreparedStatement ps = conn.prepareStatement("INSERT INTO palabras(palabra,lang) VALUES(\"?\",\"es\")")){
-                    ps.setString(1, palabra);
-                    int insertadas = ps.executeUpdate();
-                    if(insertadas > 0){
-                        insertada = true;
-                    }
-            } catch (SQLException ex) {
-                Logger.getLogger(MotorBaseDatosGA.class.getName()).log(Level.SEVERE, null, ex);
-                insertada = false;
+            if(!existePalabra(palabra)){
+                try(Connection conn = DriverManager.getConnection(URL);
+                        PreparedStatement ps = conn.prepareStatement("INSERT INTO palabras(palabra,lang) VALUES(\"?\",\"es\")")){
+                        ps.setString(1, palabra);
+                        int insertadas = ps.executeUpdate();
+                        if(insertadas > 0){
+                            insertada = true;
+                        }
+                } catch (SQLException ex) {
+                    Logger.getLogger(MotorBaseDatosGA.class.getName()).log(Level.SEVERE, null, ex);
+                    insertada = false;
+                }
             }
-        }
-        else{
-            insertada =  false;
-        }
-        return insertada;
+            else{
+                insertada =  false;
+            }
+            return insertada;
     }
     
     

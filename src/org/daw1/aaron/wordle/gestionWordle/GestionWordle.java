@@ -25,8 +25,9 @@ public class GestionWordle {
     private static final java.awt.Color verde = new java.awt.Color(0, 102, 0);
     private static final java.awt.Color negro = new java.awt.Color(255,255,255);
     
-    private static IMotor motor;
-    private String palabraAleatoria = motor.palabraAleatoria();
+    private IMotor motor;
+    private String palabraAleatoria;
+
     
     /**
      * 
@@ -46,6 +47,11 @@ public class GestionWordle {
     private Set<Character> letrasBien = new TreeSet<>();
     private Set<Character> letrasMal = new TreeSet<>();
     private Set<Character> letrasExiste = new TreeSet<>();
+
+    public GestionWordle(IMotor motor) throws Exception {
+        this.motor = motor;
+        this.palabraAleatoria = motor.palabraAleatoria();
+    }
     /**
      * Almacena los caracteres y la posicion de ellos de la palabra aleatoria
      * @param aleatoria
@@ -57,19 +63,6 @@ public class GestionWordle {
             this.mapCaracteresAleatoria.put(caracter, i);    
         }
         return this.mapCaracteresAleatoria;
-    }
-    
-    /**
-     * Almacena los caracteres y la posicion de ellos de la palabra actual insertada por el usuario
-     * @param aleatoria
-     * @return mapCaracteresInputUsuario
-     */
-    public Map<Character,Integer> almacenarCaracteresInputUsuario(String input){
-        for (int i = 0; i < input.length(); i++) {
-            char caracter = input.charAt(i);
-            this.mapCaracteresInputUsuario.put(caracter, i);    
-        }
-        return this.mapCaracteresInputUsuario;
     }
     
     /**
@@ -123,5 +116,19 @@ public class GestionWordle {
         }
         return arrayColores;
     }
+    
+    public char[] palabraInput( String input){
+        char[] caracteres = null;
+        for (int i = 0; i < input.length(); i++) {
+            caracteres[i] = input.charAt(i);
+        }
+        return caracteres;
+    }
+
+    public String getPalabraAleatoria() {
+        return palabraAleatoria;
+    }
+    
+    
     
 }

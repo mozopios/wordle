@@ -21,18 +21,18 @@ public class MotorBaseDatosGA implements IMotor {
 private static final String URL = "jdbc.sqlite:data/dbwordle.db";
 
     @Override
-    public String palabraAleatoria() {
+    public String palabraAleatoria() throws SQLException {
     String palabraAleatoria = "";
         try(Connection conn = DriverManager.getConnection(URL);
                 Statement consulta = conn.createStatement();
                 var rs = consulta.executeQuery("SELECT COUNT(palabra) from palabras WHERE lang = \"ga\"")){
                     long numeroPalabras = rs.getLong("COUNT(palabras");
-                    java.util.Random aleatorio = new java.util.Random(numeroPalabras);
+                    int aleatorio = new java.util.Random(numeroPalabras).hashCode();
                     try(Connection conne = DriverManager.getConnection(URL);
-                    PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = \"ga\" limit ?")){
+                    PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = \"ga\" limit ?,1")){
                         consultaAle.setLong(1, Math.toIntExact(aleatorio));
                         try(var rsAle = consultaAle.executeQuery()){
-                            palabraAleatoria = rsAle.getNString("palabra");
+                                palabraAleatoria = rsAle.getString("palabra");
                         }
                     }
          
@@ -43,7 +43,7 @@ private static final String URL = "jdbc.sqlite:data/dbwordle.db";
     }
 
     @Override
-    public boolean existePalabra(String palabra) {
+    public boolean existePalabra(String palabra) throws SQLException{
         boolean existe = false;
         try(Connection conne = DriverManager.getConnection(URL);
                     PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = \"ga\" AND palabra = \"?\"")){
@@ -64,7 +64,7 @@ private static final String URL = "jdbc.sqlite:data/dbwordle.db";
     }
 
     @Override
-    public boolean borrarPalabra(String palabra) {
+    public boolean borrarPalabra(String palabra) throws SQLException {
         boolean borrada = false;
         if(existePalabra(palabra)){
             try(Connection conn = DriverManager.getConnection(URL);
@@ -86,7 +86,7 @@ private static final String URL = "jdbc.sqlite:data/dbwordle.db";
     }
 
     @Override
-    public boolean añadirPalabra(String palabra) {
+    public boolean añadirPalabra(String palabra) throws SQLException {
         boolean insertada = false;
         if(!existePalabra(palabra)){
             try(Connection conn = DriverManager.getConnection(URL);
