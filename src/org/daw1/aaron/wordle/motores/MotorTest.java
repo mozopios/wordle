@@ -30,5 +30,10 @@ public class MotorTest implements IMotor{
     public boolean añadirPalabra(String palabra) throws Exception {
         return true;
     }
+
+    @Override
+    public boolean recargarDatos() throws Exception {
+        return true;
+    }
     
 }

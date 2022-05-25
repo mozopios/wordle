@@ -15,6 +15,7 @@ import java.io.Writer;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,10 +27,10 @@ public class MotorFichero implements IMotor{
     
     private static File fichero = new File("." + File.separator + "data" + File.separator + "fichero.txt");
     
-    private Set<String> palabras = new HashSet<>();
+    private Set<String> palabras = new TreeSet<>();
     
     private Set<String> cargarPalabras() throws IOException {
-        
+        palabras.clear();
         if(fichero.exists()){
             try(BufferedReader br = new BufferedReader(new FileReader(fichero))){
                 String linea = br.readLine();
@@ -41,48 +42,43 @@ public class MotorFichero implements IMotor{
                        linea = br.readLine(); 
                     }
                 }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return palabras;
     }
     
     public String[] cargarPalabrasParaAleatoria() throws IOException {
-        String palabras[] = null;
+        String arraypalabras[] = null;
+        int posicion = 0;
         if(fichero.exists()){
             try(BufferedReader br = new BufferedReader(new FileReader(fichero))){
-                String linea = br.readLine();
                 int numeroLineasFichero = Math.toIntExact(br.lines().count());
-                palabras = new String[numeroLineasFichero];
+                arraypalabras = new String[numeroLineasFichero];
+                String linea = br.readLine();
                 while(linea != null){
                     if(linea.length()==5){
-                        int posicion = 0; 
-                        palabras[posicion] = linea;
+                        arraypalabras[posicion] = linea;
                         posicion ++;
                         linea = br.readLine();
                     }else{
                         linea = br.readLine();
                     }
                 }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
+                br.close();
+                return arraypalabras;
+        }
+         }else{
+            throw new FileNotFoundException("El fichero no existía en la ruta: " +  fichero.getAbsolutePath() +" ahora ya a sido creado,añadale palabras para empezar a jugar");
             }
-        }// Preguntar si tendria que devolve run throws
-        return palabras;
+        
     }
 
    @Override
     public String palabraAleatoria() throws IOException {
-        String palabras[] = cargarPalabrasParaAleatoria();
-        java.util.Random aleatorio  = new java.util.Random(palabras.length);
-        int randomToInt = aleatorio.nextInt();
-        System.out.println(randomToInt);
-        return palabras[randomToInt];
+        String arrayPalabras[] = cargarPalabrasParaAleatoria();
+        java.util.Random aleatorio  = new java.util.Random();
+        int randomToInt = aleatorio.nextInt(arrayPalabras.length);
+        return arrayPalabras[randomToInt];
     }
 
     @Override
@@ -93,6 +89,7 @@ public class MotorFichero implements IMotor{
 
     @Override
     public boolean borrarPalabra(String palabra) throws IOException  {
+        
         boolean borrado = false;
         if(!existePalabra(palabra)){
             borrado = false;
@@ -107,9 +104,10 @@ public class MotorFichero implements IMotor{
                         wr.write(palabra + "\n");
                     }
                     borrado = true;
-                } catch (IOException ex) {
-                    Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
+                    wr.close();
                 }
+            }else{
+                throw new IOException("Error al borrar la palabra");
             }
         }
         return borrado;
@@ -130,13 +128,33 @@ public class MotorFichero implements IMotor{
                         String palabras = it.next();
                         wr.write(palabra + "\n");
                     }
+                    this.palabras.clear();
                     añadido = true;
-                } catch (IOException ex) {
-                    Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }else{
+                throw new IOException("Error al añadir la palabra");
             }
         }
         return añadido;
+    }
+
+    @Override
+    public boolean recargarDatos() throws Exception {
+        if(this.cargarPalabras().size() > 0){
+            this.cargarPalabras().clear();
+            this.cargarPalabrasParaAleatoria();
+            cargarPalabras();
+            this.palabraAleatoria();
+            return true;
+        }
+        else if(this.cargarPalabras().size() ==0){
+            cargarPalabras();
+            this.palabraAleatoria();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     
 }

@@ -13,5 +13,6 @@ public interface IMotor {
     public boolean existePalabra(String palabra) throws Exception;
     public boolean borrarPalabra(String palabra) throws Exception;
     public boolean añadirPalabra(String palabra) throws Exception;
+    public boolean recargarDatos()throws Exception;
     
 }

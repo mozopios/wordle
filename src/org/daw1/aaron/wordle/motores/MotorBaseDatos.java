@@ -4,6 +4,8 @@
  */
 package org.daw1.aaron.wordle.motores;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -18,50 +20,45 @@ import java.util.logging.Logger;
  *
  * @author mozop
  */
-public class MotorBaseDatosES implements IMotor {
-    private static final String URL = "jdbc.sqlite:data/dbwordle.db";
+public class MotorBaseDatos implements IMotor {
+    private static File f = new File(Paths.get(".") + File.separator + "data" + File.separator + "dbwordle.db");
+    private static final String URL = "jdbc:sqlite:" + f.toString();
+    
+    private String idioma;
 
+    public MotorBaseDatos(String idioma) {
+        this.idioma = idioma;
+    }
     @Override
     public String palabraAleatoria() throws SQLException{
-        String palabraAleatoria = "";
         try(Connection conn = DriverManager.getConnection(URL);
-                Statement consulta = conn.createStatement();
-                var rs = consulta.executeQuery("SELECT COUNT(palabra) from palabras WHERE lang = \"es\"")){
-                    long numeroPalabras = rs.getLong("COUNT(palabras");
-                    int aleatorio = new java.util.Random(numeroPalabras).hashCode();
+                PreparedStatement consulta = conn.prepareStatement("SELECT COUNT(palabra) AS TOTAL from palabras WHERE lang = ?");
+                var rs = consulta.executeQuery()){
+                    consulta.setString(1, idioma);
+                    int numeroPalabras = rs.getInt("TOTAL");
+                    int aleatorio = new java.util.Random().nextInt(numeroPalabras);
                     try(Connection conne = DriverManager.getConnection(URL);
-                    PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = \"es\" limit ?,1")){
-                        consultaAle.setLong(1, Math.toIntExact(aleatorio));
+                    PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = ? limit ?,1")){
+                        consultaAle.setString(1,idioma);
+                        consultaAle.setInt(2,aleatorio);
                         try(var rsAle = consultaAle.executeQuery()){
-                            palabraAleatoria = rsAle.getNString("palabra");
+                            rsAle.next();
+                            return rsAle.getString("palabra");
                         }
                     }
-         
-        } catch (SQLException ex) {
-            Logger.getLogger(MotorBaseDatosES.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return palabraAleatoria;
     }
 
     @Override
     public boolean existePalabra(String palabra) throws SQLException {
-        boolean existe = false;
         try(Connection conne = DriverManager.getConnection(URL);
-                    PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = \"ga\" AND palabra = \"?\"")){
+                    PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = ? AND palabra = ?")){
                         consultaAle.setString(1,palabra);
+                        consultaAle.setString(2,idioma);
                         try(var rsAle = consultaAle.executeQuery()){
-                            String palabraABuscar = rsAle.getString("palabra");
-                            if(palabraABuscar.isBlank()){
-                                existe = false;
-                            }
-                            else{
-                                existe = true;
-                            }
+                            return rsAle.next();
                         }
-                    } catch (SQLException ex) {
-        Logger.getLogger(MotorBaseDatosGA.class.getName()).log(Level.SEVERE, null, ex);
-    }
-        return existe;
+        }
     }
 
     @Override
@@ -69,15 +66,16 @@ public class MotorBaseDatosES implements IMotor {
         boolean borrada = false;
         if(existePalabra(palabra)){
             try(Connection conn = DriverManager.getConnection(URL);
-                    PreparedStatement ps = conn.prepareStatement("DELETE FROM palabras WHERE palabra = \"?\"")){
-                    ps.setString(1, palabra);
+                    PreparedStatement ps = conn.prepareStatement("DELETE FROM palabras WHERE lang = ? AND palabra = ?")){
+                    ps.setString(1, idioma);
+                    ps.setString(2, palabra);
                     int borradas = ps.executeUpdate();
                     if(borradas > 0){
                         borrada = true;
+                    }else{
+                        
                     }
-            } catch (SQLException ex) {
-                Logger.getLogger(MotorBaseDatosGA.class.getName()).log(Level.SEVERE, null, ex);
-                borrada = false;
+                   
             }
         }
         else{
@@ -91,21 +89,26 @@ public class MotorBaseDatosES implements IMotor {
         boolean insertada = false;
             if(!existePalabra(palabra)){
                 try(Connection conn = DriverManager.getConnection(URL);
-                        PreparedStatement ps = conn.prepareStatement("INSERT INTO palabras(palabra,lang) VALUES(\"?\",\"es\")")){
+                        PreparedStatement ps = conn.prepareStatement("INSERT INTO palabras(palabra,lang) VALUES(?,?)")){
                         ps.setString(1, palabra);
+                        ps.setString(1, idioma);
                         int insertadas = ps.executeUpdate();
                         if(insertadas > 0){
                             insertada = true;
+                        }else{
+                            
                         }
-                } catch (SQLException ex) {
-                    Logger.getLogger(MotorBaseDatosGA.class.getName()).log(Level.SEVERE, null, ex);
-                    insertada = false;
                 }
             }
             else{
                 insertada =  false;
             }
             return insertada;
+    }
+
+    @Override
+    public boolean recargarDatos() throws Exception {
+        return true;
     }
     
     

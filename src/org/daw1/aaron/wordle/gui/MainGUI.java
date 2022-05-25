@@ -12,9 +12,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import org.daw1.aaron.wordle.gestionWordle.GestionWordle;
-import org.daw1.aaron.wordle.motores.MotorBaseDatosES;
-import org.daw1.aaron.wordle.motores.MotorBaseDatosGA;
+import org.daw1.aaron.wordle.motores.IMotor;
+import org.daw1.aaron.wordle.motores.MotorBaseDatos;
 import org.daw1.aaron.wordle.motores.MotorFichero;
 import org.daw1.aaron.wordle.motores.MotorTest;
 
@@ -28,7 +29,7 @@ public class MainGUI extends javax.swing.JFrame {
     private static final java.awt.Color  COLOR_AMARILLO = new java.awt.Color(255 ,255, 51);
     private static final java.awt.Color  COLOR_ROJO = new java.awt.Color(255 ,0, 51);
     
-    private static final Pattern PATRON_INPUT = Pattern.compile("[A-Za-z]{5}");
+    private static final Pattern PATRON_INPUT = Pattern.compile("[A-Z]{5}");
     
     private static final int MAX_INTENTOS = 6;
     private static final int TAMANHO_PALABRA = 5;
@@ -36,36 +37,39 @@ public class MainGUI extends javax.swing.JFrame {
     private final javax.swing.JLabel[][] labels = new javax.swing.JLabel[MAX_INTENTOS][TAMANHO_PALABRA];
     
     private GestionWordle gestion;
+    private String aleatoria;
+    private int intentos = 0;
     /**
      * Creates new form MainGUI
      */
     public MainGUI() throws Exception {
-        ActionEvent evt = null;
-//        gestion = new GestionWordle(new MotorFichero());
-        this.enviarjButtonActionPerformed(evt);
+        gestion = new GestionWordle(new MotorFichero());
+        aleatoria = gestion.getPalabraAleatoria();
         initComponents();
-        //inicializarLabels();       
-       //test();
+        inicializarLabels();
+        System.out.println(gestion.getPalabraAleatoria());
     }
-   public void test() {
+    
+    public void test(){
         for (int i = 0; i < labels.length; i++) {
             JLabel[] label = labels[i];
             for (int j = 0; j < label.length; j++) {
                 JLabel jLabel = label[j];
-                jLabel.setForeground(COLOR_ROJO);
-                
+                jLabel.setVisible(false);
+
             }
-            
         }
     }
+    
     public final void inicializarLabels() {
         for (int i = 1; i <= MAX_INTENTOS; i++) {
-            for (int j = 0; j <= TAMANHO_PALABRA; j++) {
+            for (int j = 1; j <= TAMANHO_PALABRA; j++) {
                 try {
                     String nombreLabel = "jLabel" + i + "_" + j;
                     System.out.println(nombreLabel);
                     javax.swing.JLabel aux = (javax.swing.JLabel) this.getClass().getDeclaredField(nombreLabel).get(this);
                     labels[i-1][j-1] = aux;
+                    aux.setVisible(false);
                 } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                     Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -84,7 +88,7 @@ public class MainGUI extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        grupo = new javax.swing.ButtonGroup();
         mainjPanel = new javax.swing.JPanel();
         letrasjPanel = new javax.swing.JPanel();
         jLabel1_1 = new javax.swing.JLabel();
@@ -452,9 +456,19 @@ public class MainGUI extends javax.swing.JFrame {
         mainjPanel.add(bottomjPanel, java.awt.BorderLayout.PAGE_END);
 
         archivosjMenu.setText("Archivo");
+        archivosjMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                archivosjMenuActionPerformed(evt);
+            }
+        });
 
         nuevaPartidajMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         nuevaPartidajMenuItem.setText("Nueva Partida");
+        nuevaPartidajMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevaPartidajMenuItemActionPerformed(evt);
+            }
+        });
         archivosjMenu.add(nuevaPartidajMenuItem);
 
         jMenuBar1.add(archivosjMenu);
@@ -467,6 +481,7 @@ public class MainGUI extends javax.swing.JFrame {
         });
 
         fichero.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        grupo.add(fichero);
         fichero.setSelected(true);
         fichero.setText("Motor Fichero ");
         fichero.addActionListener(new java.awt.event.ActionListener() {
@@ -477,7 +492,7 @@ public class MainGUI extends javax.swing.JFrame {
         motoresjMenu.add(fichero);
 
         BDDES.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        BDDES.setSelected(true);
+        grupo.add(BDDES);
         BDDES.setText(" Motor BDDES");
         BDDES.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -487,7 +502,7 @@ public class MainGUI extends javax.swing.JFrame {
         motoresjMenu.add(BDDES);
 
         BDDGA.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        BDDGA.setSelected(true);
+        grupo.add(BDDGA);
         BDDGA.setText("Motor BDDGA");
         BDDGA.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -497,7 +512,7 @@ public class MainGUI extends javax.swing.JFrame {
         motoresjMenu.add(BDDGA);
 
         Test.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        Test.setSelected(true);
+        grupo.add(Test);
         Test.setText("Motor Test");
         Test.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -535,41 +550,45 @@ public class MainGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void enviarjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarjButtonActionPerformed
-        if(this.palabrajTextField.getText().length() == TAMANHO_PALABRA){
-            if(this.fichero.isSelected()){
-                this.ficheroActionPerformed(evt);
-            }else if(this.BDDES.isSelected()){
-                try {
-                    gestion = new GestionWordle(new MotorBaseDatosES());
-                    this.BDDESActionPerformed(evt);
-                } catch (Exception ex) {
-                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }else if(this.BDDGA.isSelected()){
-                try {
-                    gestion = new GestionWordle(new MotorBaseDatosGA());
-                    this.BDDGAActionPerformed(evt);
-                } catch (Exception ex) {
-                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }else if(this.Test.isSelected()){
-                try {
-                    gestion = new GestionWordle(new MotorTest());
-                    this.TestActionPerformed(evt);
-                } catch (Exception ex) {
-                    Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            
-        }else{
-               this.errorjLabel.setForeground(COLOR_ROJO);
-               this.errorjLabel.setText("La palabra tiene que tener cinco caracteres");
+        String input = this.palabrajTextField.getText().toUpperCase();
+        if(PATRON_INPUT.matcher(input).matches()){
+            Color[] colores = gestion.coloresLetras(input);
+            for(int i = 0; i < colores.length; i++) {
+                char caracter = input.charAt(i);
+                Color color = colores[i];
+                String carac = Character.toString(caracter);
+                labels[intentos][i].setForeground(color);
+                labels[intentos][i].setText(carac);
+                labels[intentos][i].setVisible(true);
+            } 
+                this.maljLabel.setText(gestion.getLetraMal());
+                this.bienjLabel.setText(gestion.getLetraBien());
+                this.existejLabel.setText(gestion.getLetraExiste());
+                gestion.getPalabraAle().clear();
+                intentos++;
+
+            if(input.equals(aleatoria)){
+                this.finaljLabel.setForeground(COLOR_VERDE);
+                this.finaljLabel.setText("Ha acertado la palabra");
+                this.enviarjButton.setVisible(false);
+            }else if(intentos == MAX_INTENTOS){
+                this.finaljLabel.setForeground(COLOR_ROJO);
+                this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+                this.enviarjButton.setVisible(false);
             }
-            
+        }else{
+            this.errorjLabel.setText("La palabra debe seguir el patron [A-Z]5");
         }
     }//GEN-LAST:event_enviarjButtonActionPerformed
 
     private void GestionMotorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GestionMotorActionPerformed
-        
+        GestionMotorGUI gestionMotor = new GestionMotorGUI(this,true,gestion);
+        gestionMotor.setVisible(true);
+        try {
+            gestion.recargarDatos();
+        } catch (Exception ex) {
+            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_GestionMotorActionPerformed
 
     private void motoresjMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motoresjMenuActionPerformed
@@ -577,92 +596,51 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_motoresjMenuActionPerformed
 
     private void ficheroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ficheroActionPerformed
-        String input = this.palabrajTextField.getText();
-        String aleatoria = gestion.getPalabraAleatoria();
-        Color[] colores = gestion.coloresLetras(input);
-        int intentos = 0;
-        
-        do{
-            for(int i = 0; i < colores.length; i++) {
-                Color color = colores[i];
-                
-            }
-            
-        }while(input.equals(aleatoria) && intentos == MAX_INTENTOS);
-        if(input.equals(aleatoria)){
-            this.finaljLabel.setForeground(COLOR_VERDE);
-            this.finaljLabel.setText("Ha acertado la palabra");
-        }else{
-            this.finaljLabel.setForeground(COLOR_ROJO);
-            this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+        try {
+            this.nuevaPartidajMenuItemActionPerformed(evt);
+            gestion = new GestionWordle(new MotorFichero());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
         }
     }//GEN-LAST:event_ficheroActionPerformed
 
     private void BDDESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BDDESActionPerformed
-        String input = this.palabrajTextField.getText();
-        String aleatoria = gestion.getPalabraAleatoria();
-        Color[] colores = gestion.coloresLetras(input);
-        int intentos = 0;
-        
-        do{
-            for(int i = 0; i < colores.length; i++) {
-                Color color = colores[i];
-                
-            }
-            
-        }while(input.equals(aleatoria) && intentos == MAX_INTENTOS);
-        if(input.equals(aleatoria)){
-            this.finaljLabel.setForeground(COLOR_VERDE);
-            this.finaljLabel.setText("Ha acertado la palabra");
-        }else{
-            this.finaljLabel.setForeground(COLOR_ROJO);
-            this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+        try {
+            this.nuevaPartidajMenuItemActionPerformed(evt);
+            gestion = new GestionWordle(new MotorBaseDatos("es"));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
         }
     }//GEN-LAST:event_BDDESActionPerformed
 
     private void BDDGAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BDDGAActionPerformed
-        String input = this.palabrajTextField.getText();
-        String aleatoria = gestion.getPalabraAleatoria();
-        Color[] colores = gestion.coloresLetras(input);
-        int intentos = 0;
-        
-        do{
-            for(int i = 0; i < colores.length; i++) {
-                Color color = colores[i];
-                
-            }
-            
-        }while(input.equals(aleatoria) && intentos == MAX_INTENTOS);
-        if(input.equals(aleatoria)){
-            this.finaljLabel.setForeground(COLOR_VERDE);
-            this.finaljLabel.setText("Ha acertado la palabra");
-        }else{
-            this.finaljLabel.setForeground(COLOR_ROJO);
-            this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+        try {
+            this.nuevaPartidajMenuItemActionPerformed(evt);
+            gestion = new GestionWordle(new MotorBaseDatos("ga"));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
         }
     }//GEN-LAST:event_BDDGAActionPerformed
 
     private void TestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestActionPerformed
-        String input = this.palabrajTextField.getText();
-        String aleatoria = gestion.getPalabraAleatoria();
-        Color[] colores = gestion.coloresLetras(input);
-        int intentos = 0;
-        
-        do{
-            for(int i = 0; i < colores.length; i++) {
-                Color color = colores[i];
-                
-            }
-            
-        }while(input.equals(aleatoria) && intentos == MAX_INTENTOS);
-        if(input.equals(aleatoria)){
-            this.finaljLabel.setForeground(COLOR_VERDE);
-            this.finaljLabel.setText("Ha acertado la palabra");
-        }else{
-            this.finaljLabel.setForeground(COLOR_ROJO);
-            this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+        try {
+            this.nuevaPartidajMenuItemActionPerformed(evt);
+            GestionWordle gestionTest = new GestionWordle(new MotorTest());
+            gestionTest.getPalabraAleatoria();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
         }
     }//GEN-LAST:event_TestActionPerformed
+
+    private void archivosjMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_archivosjMenuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_archivosjMenuActionPerformed
+
+    private void nuevaPartidajMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaPartidajMenuItemActionPerformed
+        this.test();
+        this.intentos = 0;
+        
+    }//GEN-LAST:event_nuevaPartidajMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -712,7 +690,6 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JLabel bienjLabel;
     private javax.swing.JPanel bienjPanel;
     private javax.swing.JPanel bottomjPanel;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton enviarjButton;
     private javax.swing.JLabel errorjLabel;
     private javax.swing.JPanel errorjPanel;
@@ -722,6 +699,7 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JPanel exitojPanel;
     private javax.swing.JRadioButtonMenuItem fichero;
     private javax.swing.JLabel finaljLabel;
+    private javax.swing.ButtonGroup grupo;
     private javax.swing.JPanel inputjPanel;
     private javax.swing.JLabel jLabel1_1;
     private javax.swing.JLabel jLabel1_2;
