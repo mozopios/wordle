@@ -597,8 +597,10 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void ficheroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ficheroActionPerformed
         try {
-            this.nuevaPartidajMenuItemActionPerformed(evt);
             gestion = new GestionWordle(new MotorFichero());
+            aleatoria = gestion.getPalabraAleatoria();
+            this.nuevaPartidajMenuItemActionPerformed(evt);
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
         }
@@ -606,8 +608,10 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void BDDESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BDDESActionPerformed
         try {
-            this.nuevaPartidajMenuItemActionPerformed(evt);
+            
             gestion = new GestionWordle(new MotorBaseDatos("es"));
+            aleatoria = gestion.getPalabraAleatoria();
+            this.nuevaPartidajMenuItemActionPerformed(evt);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
         }
@@ -615,8 +619,10 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void BDDGAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BDDGAActionPerformed
         try {
-            this.nuevaPartidajMenuItemActionPerformed(evt);
             gestion = new GestionWordle(new MotorBaseDatos("ga"));
+            aleatoria = gestion.getPalabraAleatoria();
+            this.nuevaPartidajMenuItemActionPerformed(evt);
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
         }
@@ -624,9 +630,9 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void TestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestActionPerformed
         try {
+            gestion = new GestionWordle(new MotorTest());
+            aleatoria = gestion.getPalabraAleatoria();
             this.nuevaPartidajMenuItemActionPerformed(evt);
-            GestionWordle gestionTest = new GestionWordle(new MotorTest());
-            gestionTest.getPalabraAleatoria();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
         }
@@ -639,7 +645,6 @@ public class MainGUI extends javax.swing.JFrame {
     private void nuevaPartidajMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaPartidajMenuItemActionPerformed
         this.test();
         this.intentos = 0;
-        
     }//GEN-LAST:event_nuevaPartidajMenuItemActionPerformed
 
     /**

@@ -70,6 +70,7 @@ public class GestionWordle {
                     letraMal.concat("," + caracInput.toString());
                     arrayColores[i] = rojo;
                 }
+                palabraAle.clear();
                 
             }
         }

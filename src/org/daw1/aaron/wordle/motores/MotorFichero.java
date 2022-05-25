@@ -60,11 +60,8 @@ public class MotorFichero implements IMotor{
                         arraypalabras[posicion] = linea;
                         posicion ++;
                         linea = br.readLine();
-                    }else{
-                        linea = br.readLine();
                     }
                 }
-                br.close();
                 return arraypalabras;
         }
          }else{
@@ -75,21 +72,21 @@ public class MotorFichero implements IMotor{
 
    @Override
     public String palabraAleatoria() throws IOException {
-        String arrayPalabras[] = cargarPalabrasParaAleatoria();
-        java.util.Random aleatorio  = new java.util.Random();
-        int randomToInt = aleatorio.nextInt(arrayPalabras.length);
-        return arrayPalabras[randomToInt];
+        String[] array = this.cargarPalabrasParaAleatoria();
+        int rd = new java.util.Random().nextInt(array.length);
+        return array[rd];
     }
 
     @Override
-    public boolean existePalabra(String palabra) {
+    public boolean existePalabra(String palabra) throws IOException {
+        this.cargarPalabras();
         return palabras.contains(palabra);
         
     }
 
     @Override
     public boolean borrarPalabra(String palabra) throws IOException  {
-        
+        this.cargarPalabras();
         boolean borrado = false;
         if(!existePalabra(palabra)){
             borrado = false;
@@ -115,6 +112,7 @@ public class MotorFichero implements IMotor{
 
     @Override
     public boolean añadirPalabra(String palabra) throws IOException  {
+        this.cargarPalabras();
         boolean añadido = false;
         if(existePalabra(palabra)){
             añadido = false;
@@ -140,21 +138,8 @@ public class MotorFichero implements IMotor{
 
     @Override
     public boolean recargarDatos() throws Exception {
-        if(this.cargarPalabras().size() > 0){
-            this.cargarPalabras().clear();
-            this.cargarPalabrasParaAleatoria();
-            cargarPalabras();
-            this.palabraAleatoria();
-            return true;
-        }
-        else if(this.cargarPalabras().size() ==0){
-            cargarPalabras();
-            this.palabraAleatoria();
-            return true;
-        }
-        else{
-            return false;
-        }
+        this.cargarPalabras();
+        return true;
     }
     
 }

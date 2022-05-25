@@ -4,6 +4,7 @@
  */
 package org.daw1.aaron.wordle;
 
+import org.daw1.aaron.wordle.gui.MainGUI;
 import org.daw1.aaron.wordle.motores.MotorFichero;
 
 /**
@@ -16,7 +17,7 @@ public class Wordle {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        MainGUI.main(args);
     }
     
 }
