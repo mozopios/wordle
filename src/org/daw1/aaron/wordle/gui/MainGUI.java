@@ -607,35 +607,21 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_ficheroActionPerformed
 
     private void BDDESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BDDESActionPerformed
-        try {
-            
-            gestion = new GestionWordle(new MotorBaseDatos("es"));
-            aleatoria = gestion.getPalabraAleatoria();
+
             this.nuevaPartidajMenuItemActionPerformed(evt);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
-        }
+        
     }//GEN-LAST:event_BDDESActionPerformed
 
     private void BDDGAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BDDGAActionPerformed
-        try {
-            gestion = new GestionWordle(new MotorBaseDatos("ga"));
-            aleatoria = gestion.getPalabraAleatoria();
+       
             this.nuevaPartidajMenuItemActionPerformed(evt);
-            
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
-        }
+         
     }//GEN-LAST:event_BDDGAActionPerformed
 
     private void TestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestActionPerformed
-        try {
-            gestion = new GestionWordle(new MotorTest());
-            aleatoria = gestion.getPalabraAleatoria();
+        
             this.nuevaPartidajMenuItemActionPerformed(evt);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar el motor: " + ex.getMessage());
-        }
+        
     }//GEN-LAST:event_TestActionPerformed
 
     private void archivosjMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_archivosjMenuActionPerformed
@@ -645,6 +631,34 @@ public class MainGUI extends javax.swing.JFrame {
     private void nuevaPartidajMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaPartidajMenuItemActionPerformed
         this.test();
         this.intentos = 0;
+        if(this.Test.isSelected()){
+            try {
+                gestion = new GestionWordle(new MotorTest());
+            } catch (Exception ex) {
+                Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else if(this.fichero.isSelected()){
+            try {
+                gestion = new GestionWordle(new MotorFichero());
+            } catch (Exception ex) {
+                Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else if(this.BDDES.isSelected()){
+            try {
+                gestion = new GestionWordle(new MotorBaseDatos("es"));
+            } catch (Exception ex) {
+                Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else if(this.BDDGA.isSelected()){
+            try {
+                gestion = new GestionWordle(new MotorBaseDatos("ga"));
+            } catch (Exception ex) {
+                Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        aleatoria = gestion.getPalabraAleatoria();
     }//GEN-LAST:event_nuevaPartidajMenuItemActionPerformed
 
     /**

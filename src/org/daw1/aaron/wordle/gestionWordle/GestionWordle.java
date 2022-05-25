@@ -52,7 +52,7 @@ public class GestionWordle {
             for (int i = 0; i < arrayColores.length; i++) {
                 arrayColores[i] = verde;
                 Character cara = input.charAt(i);
-                letraBien.concat("," + cara.toString());
+               // letraBien.concat("," + cara.toString());
             }
                
         }else{
@@ -61,13 +61,13 @@ public class GestionWordle {
                 Character caracAle = palabraAleatoria.charAt(i);
                 Character caracInput = input.charAt(i);
                 if(caracInput == caracAle){
-                    letraBien.concat("," + caracInput.toString());
+                    //letraBien.concat("," + caracInput.toString());
                     arrayColores[i] = verde;
                 }else if(caracInput != caracAle && palabraAle.contains(caracInput)){
-                    letraExiste.concat("," + caracInput.toString());
+                   // letraExiste.concat("," + caracInput.toString());
                     arrayColores[i] = amarillo;
                 }else {
-                    letraMal.concat("," + caracInput.toString());
+                    //letraMal.concat("," + caracInput.toString());
                     arrayColores[i] = rojo;
                 }
                 palabraAle.clear();
