@@ -23,15 +23,7 @@ public class Wordle {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, SQLException, Exception {
-//        MainGUI.main(args);
-        GestionWordle w = new GestionWordle(new MotorTest());
-        Scanner teclado = new Scanner(System.in);
-        System.out.println(w.getPalabraAleatoria());
-        String input = teclado.nextLine();
-        
-        w.coloresLetras(input);
-        
-        System.out.println(w.getLetraBien());
+        MainGUI.main(args);
     }
     
 }
