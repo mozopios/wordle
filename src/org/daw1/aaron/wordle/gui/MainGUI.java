@@ -47,7 +47,6 @@ public class MainGUI extends javax.swing.JFrame {
         aleatoria = gestion.getPalabraAleatoria();
         initComponents();
         inicializarLabels();
-        System.out.println(gestion.getPalabraAleatoria());
     }
     
     public void test(){
