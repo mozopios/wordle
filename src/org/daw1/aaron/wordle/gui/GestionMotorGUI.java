@@ -160,12 +160,10 @@ public class GestionMotorGUI extends javax.swing.JDialog {
                 if(gestion.exitePalabra(input)){
                     this.estadoInsertarjLabel.setForeground(COLOR_ROJO);
                     this.estadoInsertarjLabel.setText("La palabra ya existe");
-                    this.anadirjTextField.setText("");
                 }else{
                     gestion.anhadirPalabra(input);
                     this.estadoInsertarjLabel.setForeground(COLOR_VERDE);
                     this.estadoInsertarjLabel.setText("La palabra se inserto perfectamente");
-                    this.anadirjTextField.setText("");
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error al anadir la palabra: " + ex.getMessage());
@@ -173,9 +171,10 @@ public class GestionMotorGUI extends javax.swing.JDialog {
         }else{
             this.estadoInsertarjLabel.setForeground(COLOR_ROJO);
             this.estadoInsertarjLabel.setText("Palabra invalida no está formada por [A-Z]{5}");
-            this.anadirjTextField.setText("");
 
         }
+        this.anadirjTextField.setText("");
+        this.estadoBorradojLabel.setText("");
     }//GEN-LAST:event_anadirjButtonActionPerformed
 
     private void borrarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarButtonActionPerformed
@@ -186,12 +185,10 @@ public class GestionMotorGUI extends javax.swing.JDialog {
                     gestion.borrarPalabra(input);
                     this.estadoBorradojLabel.setForeground(COLOR_VERDE);
                     this.estadoBorradojLabel.setText("La palabra se ha borrado perfectamente");
-                    this.anadirjTextField.setText("");
 
                 }else{
                     this.estadoBorradojLabel.setForeground(COLOR_ROJO);
                     this.estadoBorradojLabel.setText("La palabra no existe");
-                    this.anadirjTextField.setText("");
 
                 }
             } catch (Exception ex) {
@@ -201,9 +198,9 @@ public class GestionMotorGUI extends javax.swing.JDialog {
         }else{
             this.estadoBorradojLabel.setForeground(COLOR_ROJO);
             this.estadoBorradojLabel.setText("Palabra invalida no está formada por [A-Z]{5}");
-            this.anadirjTextField.setText("");
-
         }
+        this.borrarjTextField.setText("");
+        this.estadoInsertarjLabel.setText("");
     }//GEN-LAST:event_borrarButtonActionPerformed
 
     /**

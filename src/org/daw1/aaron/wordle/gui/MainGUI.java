@@ -394,7 +394,7 @@ public class MainGUI extends javax.swing.JFrame {
         existejPanel.setLayout(new java.awt.GridLayout(1, 0));
 
         existejLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        existejLabel.setForeground(new java.awt.Color(255, 255, 51));
+        existejLabel.setForeground(new java.awt.Color(255, 204, 0));
         existejPanel.add(existejLabel);
 
         estadojPanel.add(existejPanel);
@@ -553,6 +553,9 @@ public class MainGUI extends javax.swing.JFrame {
         String input = this.palabrajTextField.getText().toUpperCase();
         if(PATRON_INPUT.matcher(input).matches()){
             Color[] colores = gestion.coloresLetras(input);
+            this.bienjLabel.setText("");
+            this.maljLabel.setText("");
+            this.existejLabel.setText("");
             for(int i = 0; i < colores.length; i++) {
                 char caracter = input.charAt(i);
                 Color color = colores[i];
@@ -560,35 +563,33 @@ public class MainGUI extends javax.swing.JFrame {
                 labels[intentos][i].setForeground(color);
                 labels[intentos][i].setText(carac);
                 labels[intentos][i].setVisible(true);
-            } 
+            }
                 this.maljLabel.setText(gestion.getLetraMal());
                 this.bienjLabel.setText(gestion.getLetraBien());
                 this.existejLabel.setText(gestion.getLetraExiste());
                 gestion.getPalabraAle().clear();
+                this.palabrajTextField.setText("");
                 intentos++;
 
             if(input.equals(aleatoria)){
                 this.finaljLabel.setForeground(COLOR_VERDE);
-                this.finaljLabel.setText("Ha acertado la palabra");
+                this.finaljLabel.setText("Ha acertado la palabra, Intentos: " + intentos );
                 this.enviarjButton.setVisible(false);
             }else if(intentos == MAX_INTENTOS){
                 this.finaljLabel.setForeground(COLOR_ROJO);
-                this.finaljLabel.setText("Intentos acabados , la palabra correcta era + " + aleatoria);
+                this.finaljLabel.setText("Intentos acabados , la palabra correcta era  " + aleatoria);
                 this.enviarjButton.setVisible(false);
             }
         }else{
-            this.errorjLabel.setText("La palabra debe seguir el patron [A-Z]5");
+            this.errorjLabel.setText("La palabra debe tener 5 letras");
+            this.errorjLabel.setText("");
         }
     }//GEN-LAST:event_enviarjButtonActionPerformed
 
     private void GestionMotorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GestionMotorActionPerformed
         GestionMotorGUI gestionMotor = new GestionMotorGUI(this,true,gestion);
         gestionMotor.setVisible(true);
-        try {
-            gestion.recargarDatos();
-        } catch (Exception ex) {
-            Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.nuevaPartidajMenuItemActionPerformed(evt);
     }//GEN-LAST:event_GestionMotorActionPerformed
 
     private void motoresjMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motoresjMenuActionPerformed
@@ -631,6 +632,12 @@ public class MainGUI extends javax.swing.JFrame {
     private void nuevaPartidajMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevaPartidajMenuItemActionPerformed
         this.test();
         this.intentos = 0;
+        this.errorjLabel.setText("");
+        this.finaljLabel.setText("");
+        this.bienjLabel.setText("");
+        this.existejLabel.setText("");
+        this.maljLabel.setText("");
+        this.enviarjButton.setVisible(true);
         if(this.Test.isSelected()){
             try {
                 gestion = new GestionWordle(new MotorTest());
@@ -653,7 +660,7 @@ public class MainGUI extends javax.swing.JFrame {
         }
         else if(this.BDDGA.isSelected()){
             try {
-                gestion = new GestionWordle(new MotorBaseDatos("ga"));
+                gestion = new GestionWordle(new MotorBaseDatos("gl"));
             } catch (Exception ex) {
                 Logger.getLogger(MainGUI.class.getName()).log(Level.SEVERE, null, ex);
             }

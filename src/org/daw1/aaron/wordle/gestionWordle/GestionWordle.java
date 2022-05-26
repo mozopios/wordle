@@ -28,9 +28,9 @@ public class GestionWordle {
     
     private IMotor motor;
     private String palabraAleatoria;
-    private String letraBien;
-    private String letraMal;
-    private String letraExiste;
+    private String letraBien = "";
+    private String letraMal = "";
+    private String letraExiste = "";
     private Set<Character> palabraAle = new TreeSet<>();
 
     public GestionWordle(IMotor motor) throws Exception {
@@ -48,32 +48,35 @@ public class GestionWordle {
     
        public java.awt.Color[] coloresLetras(String input){
         java.awt.Color[] arrayColores = new java.awt.Color[5];
+        this.letraBien="";
+        this.letraExiste="";
+        this.letraMal="";
         if(palabraAleatoria.equals(input)){
             for (int i = 0; i < arrayColores.length; i++) {
                 arrayColores[i] = verde;
                 Character cara = input.charAt(i);
-               // letraBien.concat("," + cara.toString());
+                this.letraBien += Character.toString(cara);
             }
                
         }else{
             palabraAleatoriaCaracteres();
             for(int i = 0; i < input.length(); i++) {
-                Character caracAle = palabraAleatoria.charAt(i);
-                Character caracInput = input.charAt(i);
+                char caracAle = palabraAleatoria.charAt(i);
+                char caracInput = input.charAt(i);
                 if(caracInput == caracAle){
-                    //letraBien.concat("," + caracInput.toString());
+                    this.letraBien += Character.toString(caracInput);
                     arrayColores[i] = verde;
                 }else if(caracInput != caracAle && palabraAle.contains(caracInput)){
-                   // letraExiste.concat("," + caracInput.toString());
+                    this.letraExiste += Character.toString(caracInput);
                     arrayColores[i] = amarillo;
                 }else {
-                    //letraMal.concat("," + caracInput.toString());
+                    this.letraMal += Character.toString(caracInput);
                     arrayColores[i] = rojo;
                 }
-                palabraAle.clear();
                 
             }
         }
+        this.palabraAle.clear();
         return arrayColores;
     }
 

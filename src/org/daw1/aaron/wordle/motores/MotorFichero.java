@@ -39,7 +39,7 @@ public class MotorFichero implements IMotor{
                        palabras.add(linea);
                        linea = br.readLine();
                     }else{
-                       linea = br.readLine(); 
+                        linea = br.readLine();
                     }
                 }
             }
@@ -47,18 +47,35 @@ public class MotorFichero implements IMotor{
         return palabras;
     }
     
+    public int contarLineas() throws IOException{
+        int lineas = 0;
+        try(BufferedReader br = new BufferedReader(new FileReader(fichero))){
+            String linea = br.readLine();
+            while(linea != null){
+                lineas++;
+                linea = br.readLine();
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MotorFichero.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lineas;
+    }
+    
     public String[] cargarPalabrasParaAleatoria() throws IOException {
-        String arraypalabras[] = null;
+        String arraypalabras[];
         int posicion = 0;
+        
         if(fichero.exists()){
             try(BufferedReader br = new BufferedReader(new FileReader(fichero))){
-                int numeroLineasFichero = Math.toIntExact(br.lines().count());
+                int numeroLineasFichero = contarLineas();
                 arraypalabras = new String[numeroLineasFichero];
                 String linea = br.readLine();
                 while(linea != null){
                     if(linea.length()==5){
                         arraypalabras[posicion] = linea;
                         posicion ++;
+                        linea = br.readLine();
+                    }else{
                         linea = br.readLine();
                     }
                 }
@@ -86,8 +103,8 @@ public class MotorFichero implements IMotor{
 
     @Override
     public boolean borrarPalabra(String palabra) throws IOException  {
-        this.cargarPalabras();
         boolean borrado = false;
+        this.cargarPalabras();
         if(!existePalabra(palabra)){
             borrado = false;
         }
@@ -95,13 +112,12 @@ public class MotorFichero implements IMotor{
             palabras.remove(palabra);
             Iterator<String> it =  palabras.iterator();
             if(fichero.exists() && fichero.canWrite()){
-                try(Writer wr = new BufferedWriter(new FileWriter(fichero))){
+                try(Writer wr = new BufferedWriter(new FileWriter(fichero.getAbsoluteFile(),false))){
                     while(it.hasNext()){
-                        String palabras = it.next();
-                        wr.write(palabra + "\n");
+                        String pal = it.next();
+                        wr.write(pal + "\n");
                     }
                     borrado = true;
-                    wr.close();
                 }
             }else{
                 throw new IOException("Error al borrar la palabra");
@@ -113,27 +129,21 @@ public class MotorFichero implements IMotor{
     @Override
     public boolean añadirPalabra(String palabra) throws IOException  {
         this.cargarPalabras();
-        boolean añadido = false;
+        boolean anadido = false;
         if(existePalabra(palabra)){
-            añadido = false;
+            anadido = false;
         }
         else{
-            palabras.add(palabra);
-            Iterator<String> it =  palabras.iterator();
             if(fichero.exists() && fichero.canWrite()){
                 try(Writer wr = new BufferedWriter(new FileWriter(fichero.getAbsoluteFile(),true))){
-                    while(it.hasNext()){
-                        String palabras = it.next();
                         wr.write(palabra + "\n");
-                    }
-                    this.palabras.clear();
-                    añadido = true;
+                    anadido = true;
                 }
             }else{
                 throw new IOException("Error al añadir la palabra");
             }
         }
-        return añadido;
+        return anadido;
     }
 
     @Override

@@ -4,8 +4,14 @@
  */
 package org.daw1.aaron.wordle;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Scanner;
+import org.daw1.aaron.wordle.gestionWordle.GestionWordle;
 import org.daw1.aaron.wordle.gui.MainGUI;
+import org.daw1.aaron.wordle.motores.MotorBaseDatos;
 import org.daw1.aaron.wordle.motores.MotorFichero;
+import org.daw1.aaron.wordle.motores.MotorTest;
 
 /**
  *
@@ -16,8 +22,16 @@ public class Wordle {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        MainGUI.main(args);
+    public static void main(String[] args) throws IOException, SQLException, Exception {
+//        MainGUI.main(args);
+        GestionWordle w = new GestionWordle(new MotorTest());
+        Scanner teclado = new Scanner(System.in);
+        System.out.println(w.getPalabraAleatoria());
+        String input = teclado.nextLine();
+        
+        w.coloresLetras(input);
+        
+        System.out.println(w.getLetraBien());
     }
     
 }

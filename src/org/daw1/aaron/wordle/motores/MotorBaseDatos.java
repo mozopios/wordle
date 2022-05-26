@@ -31,11 +31,14 @@ public class MotorBaseDatos implements IMotor {
     }
     @Override
     public String palabraAleatoria() throws SQLException{
+        int numeroPalabras = 0;
         try(Connection conn = DriverManager.getConnection(URL);
-                PreparedStatement consulta = conn.prepareStatement("SELECT COUNT(palabra) AS TOTAL from palabras WHERE lang = ?");
-                var rs = consulta.executeQuery()){
-                    consulta.setString(1, idioma);
-                    int numeroPalabras = rs.getInt("TOTAL");
+                PreparedStatement consulta = conn.prepareStatement("SELECT COUNT(palabra) AS TOTAL from palabras WHERE lang = ?")){
+                    consulta.setString(1,idioma);
+                    try(var rs = consulta.executeQuery()){
+                     numeroPalabras = rs.getInt("TOTAL");
+                    }
+        }
                     int aleatorio = new java.util.Random().nextInt(numeroPalabras);
                     try(Connection conne = DriverManager.getConnection(URL);
                     PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = ? limit ?,1")){
@@ -46,15 +49,14 @@ public class MotorBaseDatos implements IMotor {
                             return rsAle.getString("palabra");
                         }
                     }
-        }
     }
 
     @Override
     public boolean existePalabra(String palabra) throws SQLException {
         try(Connection conne = DriverManager.getConnection(URL);
                     PreparedStatement consultaAle = conne.prepareStatement("SELECT palabra from palabras WHERE lang = ? AND palabra = ?")){
-                        consultaAle.setString(1,palabra);
-                        consultaAle.setString(2,idioma);
+                        consultaAle.setString(1,idioma);
+                        consultaAle.setString(2,palabra);
                         try(var rsAle = consultaAle.executeQuery()){
                             return rsAle.next();
                         }
@@ -91,7 +93,7 @@ public class MotorBaseDatos implements IMotor {
                 try(Connection conn = DriverManager.getConnection(URL);
                         PreparedStatement ps = conn.prepareStatement("INSERT INTO palabras(palabra,lang) VALUES(?,?)")){
                         ps.setString(1, palabra);
-                        ps.setString(1, idioma);
+                        ps.setString(2, idioma);
                         int insertadas = ps.executeUpdate();
                         if(insertadas > 0){
                             insertada = true;
